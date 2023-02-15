@@ -29,7 +29,6 @@ As previously stated, the emergency management of Sweden and Denmark has attract
 <img width="600" alt="figure 2" src="https://user-images.githubusercontent.com/87983033/219109503-ae4d77e5-325f-4b02-bac9-84c102bd7741.png">
 
 
-
 ### 3. Data
 Information on daily Covid-19 deaths and cases in Sweden and Denmark covers the period from February 26 up to June 3, 2020. In particular, the data employed to perform the empirical investigation are drawn from the European Centre for Disease Prevention. In this study, the main two outcomes are the 7-day moving average of new daily Covid-19 cases and deaths. Despite the availability of daily data about Covid- 19 cases and deaths, we opted for using only the 7-day moving average in the DiD implementation because it provides an average line over time and mitigates the daily fluctuations of deaths and cases. Since, as seen in the Institutional background section, the two countries have a rather different population size, such numbers has been normalized per million population. In order to distinguish between pre- and post-treatment periods, we used policies’ information from the Oxford COVID-19 Government Response Tracker, which report March 18 as the first day when gatherings restrictions and workplace closing were applied in Denmark, but not in Sweden. We highlight that this difference persists for the whole studied period (i.e. until June 3). Preliminary descriptive graphs for daily Covid-19 deaths and cases with 7-day moving average are presented below.
 
@@ -47,9 +46,13 @@ In the absence of randomized controlled trials, we used observational data to te
 
 #### 4.1 DiD assumptions
 In order to be theoretically supported, the formal identification of a DiD model requires three main assumptions to be respected.
-1) **Common trend assumption**
-2) **Participation into the treatment is independent of idiosyncratic shocks**
-3) **Absence of systematic composition changes within each group**
+1) **Common trend assumption**. The identification of the ATT using DiD relies on the assumption that, in the absence of the treatment (NPIs introduction), the treatment group (Denmark) and the control group (Sweden) would have experienced parallel trends in terms of 7-day moving average of Covid-19 cases and deaths. 
+We observed that both daily Covid-19 cases and deaths experienced a common and parallel trend until the policy introduction and beyond (see Fig. 3 and Fig. 4).
+This because the incubation period for Covid-19 (i.e., the time between exposure to the virus and the onset of symptoms) is estimated to be between one and 14 days (WHO, 2021) leading us to suppose that the effect of policy restrictions cannot be evident close to the policy introduction date (March 18).
+
+2) **Participation into the treatment is independent of idiosyncratic shocks**. In order to ensure a meaningful comparability, participation into treatment must be exogenous, i.e., not driven by some time-variant state-specific characteristics or shock. In this case, the “Ashenfelter’s Dip”, which is the phenomenon explaining the anticipation effects regarding future participation into the treatment (Bergemann et al., 2009), is not observed in Fig. 3 and Fig. 4. Therefore, we assumed that the ATT estimate referred to the NPIs introduction and not to other idiosyncratic shocks.
+
+3) **Absence of systematic composition changes within each group**. If systematic composition changes (e.g. in population density) occurred within each group, the observed difference in the outcome would be caused not only by the treatment itself but also by those changes. It is unlikely this assumption to be disregarded. The populations of the considered countries are large, and so a huge movement of people would be needed to change the composition substantially. Second, many travel bans were adopted at that time.
 
 
 ### 5. Conclusions
