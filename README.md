@@ -63,6 +63,32 @@ ggplot(dta, aes(x=Time, y=stringency_index, color=Country)) +
 ### 3. Data
 Information on daily Covid-19 deaths and cases in Sweden and Denmark covers the period from February 26 up to June 3, 2020. In particular, the data employed to perform the empirical investigation are drawn from the European Centre for Disease Prevention. In this study, the main two outcomes are the 7-day moving average of new daily Covid-19 cases and deaths. Despite the availability of daily data about Covid- 19 cases and deaths, we opted for using only the 7-day moving average in the DiD implementation because it provides an average line over time and mitigates the daily fluctuations of deaths and cases. Since, as seen in the Institutional background section, the two countries have a rather different population size, such numbers has been normalized per million population. In order to distinguish between pre- and post-treatment periods, we used policies’ information from the Oxford COVID-19 Government Response Tracker, which report March 18 as the first day when gatherings restrictions and workplace closing were applied in Denmark, but not in Sweden. We highlight that this difference persists for the whole studied period (i.e. until June 3). Preliminary descriptive graphs for daily Covid-19 deaths and cases with 7-day moving average are presented below.
 
+```ruby
+ggplot(dta, aes(x=Time,y=new_cases,color=Country)) +
+  geom_point(alpha=0.35) + geom_line(alpha=0.35) + theme_bw()+
+  labs(y='New cases per million') +
+geom_vline(xintercept = as.Date("2020-03-18"), linetype='dashed', color='blue', size=0.7) +
+  geom_vline(xintercept = as.Date("2020-04-01"), linetype='dashed', color='red', size=0.7) +
+  geom_vline(xintercept = as.Date("2020-04-08"), linetype='dashed', color='black', size=0.7) +
+  scale_x_continuous(breaks=as.Date(c('2020-03-01', '2020-03-18', '2020-04-01', 
+                                      '2020-04-08', '2020-05-01', '2020-06-01')), 
+                     labels=c('Mar', 'Mar18', 'Apr1', 'Apr8', 'May', 'Jun')) +
+  geom_line(aes(y=new_cases_per_million_smoothed, color=Country), size=1)
+```
+
+```ruby
+ggplot(dta, aes(x=Time,y=new_deaths,color=Country)) +
+  geom_point(alpha=0.35) + geom_line(alpha=0.35) + theme_bw()+
+  labs(y='New deaths per million') +
+geom_vline(xintercept = as.Date("2020-03-18"), linetype='dashed', color='blue', size=0.7) +
+  geom_vline(xintercept = as.Date("2020-04-01"), linetype='dashed', color='red', size=0.7) +
+  geom_vline(xintercept = as.Date("2020-04-08"), linetype='dashed', color='black', size=0.7) +
+  scale_x_continuous(breaks=as.Date(c('2020-03-01', '2020-03-18', '2020-04-01', 
+                                      '2020-04-08', '2020-05-01', '2020-06-01')), 
+                     labels=c('Mar', 'Mar18', 'Apr1', 'Apr8', 'May', 'Jun')) +
+  geom_line(aes(y=new_deaths_per_million_smoothed, color=Country), size=1)
+ ``` 
+  
 <img width="600" alt="figura 3 e 4" src="https://user-images.githubusercontent.com/87983033/219110508-d6de74a3-75f6-487f-9069-6bb0937be562.png">
 
 
@@ -77,6 +103,7 @@ In the absence of randomized controlled trials, we used observational data to te
 
 #### 4.1 DiD assumptions
 In order to be theoretically supported, the formal identification of a DiD model requires three main assumptions to be respected.
+
 1) **Common trend assumption**. The identification of the ATT using DiD relies on the assumption that, in the absence of the treatment (NPIs introduction), the treatment group (Denmark) and the control group (Sweden) would have experienced parallel trends in terms of 7-day moving average of Covid-19 cases and deaths. 
 We observed that both daily Covid-19 cases and deaths experienced a common and parallel trend until the policy introduction and beyond (see Fig. 3 and Fig. 4).
 This because the incubation period for Covid-19 (i.e., the time between exposure to the virus and the onset of symptoms) is estimated to be between one and 14 days (WHO, 2021) leading us to suppose that the effect of policy restrictions cannot be evident close to the policy introduction date (March 18).
