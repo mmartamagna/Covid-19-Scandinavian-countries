@@ -24,7 +24,38 @@ As previously stated, the emergency management of Sweden and Denmark has attract
 
 <img width="600" alt="tabella 2" src="https://user-images.githubusercontent.com/87983033/219108052-2ebb744b-ebb5-49f7-98dc-0a46b4c30dd5.png">
 
+```ruby
+tour <- data.frame(Country = c('Denmark', 'Sweden'), 
+                   January = c(2, -1), 
+                   February = c(7, -5), 
+                   March = c(-66, -64), 
+                   April = c(-97, -91), 
+                   May = c(-96, -88), 
+                   June = c(-87, -88)) %>%
+  gather("Month", "Change", 2:7)
+tour$Month <- factor(tour$Month, levels=c('January', 'February', 'March',
+                                          'April', 'May', 'June'))
+
+ggplot(data=tour, aes(x=Month, y=Change, fill=Country)) +
+  geom_bar(stat="identity", position=position_dodge(), width=0.7, alpha=0.9) + theme_bw() +
+  labs(y = '% Change') + theme(plot.caption = element_text(hjust=0.5))
+```
 <img width="600" alt="figure 1" src="https://user-images.githubusercontent.com/87983033/219109493-0757bebc-1c67-49ba-b344-f528deee3369.png">
+
+```ruby
+#Data import
+Sys.setlocale(category = "LC_ALL", locale = "english")
+dta <- read.csv("DiD_data.csv") %>%
+  arrange(Time, Country)
+#Factorize countries and make dates
+dta$Time <- as.Date(dta$Time)
+dta$Country <- factor(dta$Country)
+
+#Plot
+ggplot(dta, aes(x=Time, y=stringency_index, color=Country)) +
+  geom_point(alpha=0.9, shape=23, size=0.8) + geom_line(alpha=0.9) + theme_bw() +
+  labs(y='Stringency Index') + theme(plot.caption = element_text(hjust=0.5))
+```
 
 <img width="600" alt="figure 2" src="https://user-images.githubusercontent.com/87983033/219109503-ae4d77e5-325f-4b02-bac9-84c102bd7741.png">
 
