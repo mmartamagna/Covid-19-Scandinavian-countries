@@ -1,5 +1,5 @@
 # Difference-in-Differences to identify the causal effect of NPIs during Covid-19: evidence from Denmark and Sweden
-_This project was prepared with a M.Sc. colleague for the Labour economics and Policy evaluation course. Everything written and plotted below was entirely prepared by the authors._
+_This project was prepared with a M.Sc. colleague for the Labour economics and Policy evaluation course. Everything presented below was entirely prepared by the authors._
 
 During the first wave of Covid-19, not all European countries adopted the same restrictive strategies and policies. An interesting case is the one regarding Sweden, which decided to not impose severe confinement measures and to rely on community trust and individual decision-making. Conversely, confining Scandinavian countries such as Denmark immediately introduced severe non-pharmaceutical interventions (NPIs) to tackle the emergency. In this project, we exploit policy variation between Denmark and Sweden to investigate the causal effect of introducing NPIs, namely workplace closing and gatherings restrictions, on the 7-day moving average of deaths and cases. Our Difference-in-Differences (DiD) models provide evidence that during the first Covid-19 wave such policies have been significantly effective and persistent over time in curtailing the curve of deaths and cases in Denmark, as compared to the Swedish situation.
 
@@ -9,8 +9,6 @@ During the first wave of Covid-19, not all European countries adopted the same r
 2. [Policy response to Covid-19](#policy-response-to-Covid-19)
 3. [Data](#data)
 4. [Model estimation (DiD)](#model-estimation-(DiD))
-5. [Conclusions](#conclusions)
-
 
 ### 1. Institutional background
 The different responses to the Covid-19 crisis that occurred in neighbouring countries such as Sweden and Denmark attracted our attention because they are generally known for having nearly identical state-society relations and political-administrative systems (Plümper et al., 2020). These aspects contributed to considering them as optimal candidates for a DiD application, because in a such setting the only difference between the treated and control groups is supposed to be the treatment itself. In this DiD analysis, Sweden served as a counterfactual to Denmark because it was the only country that has not applied strict containment measures. Before defining the model, it’s crucial to provide a comprehensive comparison between the two Scandinavian countries in terms of economics, healthcare and demographic characteristics, to better understand their similarities and differences.
@@ -156,6 +154,10 @@ smooth.deaths.3 <- lm(new_deaths_per_million_smoothed ~ Treat + Post.3 + Post.3*
 ```
 <img width="500" alt="table 3" src="https://user-images.githubusercontent.com/87983033/219318735-2476645e-6a65-4f69-a958-4279e17c50da.png">
 
+The first evidence is the $\delta$ for cases in the first specification ($t_{0}$ = March 18) to be not significant: this means that, in the first three weeks of workplace closure and gathering restrictions, there was no significant difference (in terms of cases) between Sweden and Denmark. However, the coefficient becomes significant when considering the beginning of the treatment after two weeks ($t_{0}$=April 1): this is reasonable since many studies suggest that lockdown effects can not be observed right after its introduction, but following two or three weeks (Goodman-Bacon and Marcus, 2020; Bonacini et al., 2021; Juranek et al., 2021). NPIs effects on cases are even stronger (and more significant) when considering $t_{0}$=April 8, three weeks after the NPIs introduction. In fact, considering a 7-day moving average, the restrictive policies are estimated to have avoided around 16 cases per million per day in Denmark in the considered three-week period. 
+
+For what concerns deaths, the $\delta$ is significant since the first specification ($t_{0}$=March 18) and it remains so also in the following two. As for cases, the estimates increase (in absolute value) as the beginning of the treatment is artificially postponed to April 1 and April 8. Particularly, in the third specification ($t_{0}$=April 8) the coefficient $\delta$=5.14 in absolute value, indicating that the NPIs introduction avoided on average 5 deaths per million in Denmark in that period.
+
 ### 4.3 Event-study approach
 As previously said, the event-study approach allows to inspect how the “lockdown effect” changed over time and the extent to which it remained significant. Restrictions were heavier in Denmark than in Sweden until June 3, where the policies were placed on the same level (both countries forbade gatherings greater than 10 people). We estimated an event-study model using 7-day moving average observations up to June 3 in order to evaluate the joint effect of workplace closures and gatherings restrictions in the eleven weeks after the policies introduction (March 18). The model has the following form: 
 
@@ -183,6 +185,9 @@ ggplot(coeff.cases, aes(x=1:11, y=Estimate)) + geom_point(size=3, color='#BC412B
 <img width="500" alt="fig 5" src="https://user-images.githubusercontent.com/87983033/219320158-36446bdd-ed04-49d8-b8f1-cba31c14f0b6.png">
 
 <img width="500" alt="fig 6" src="https://user-images.githubusercontent.com/87983033/219320141-cd774f00-14ed-4e39-b3f8-8214105b6133.png">
+
+The event-study for cases (Fig. 5) shows that, coherently with our findings in the previous paragraph, NPIs effect took four weeks to become significant. The coefficient estimates constantly decreased until the eleventh week after the policies introduction ($\delta_{11}=-50.58$). This result indicates that, after eleven weeks from their introduction, workplace closures and gatherings restrictions avoided around 50 Covid-19 new daily cases per million (in terms of 7-day average).
+For what concerns the event-study for deaths (Fig. 6), the $\delta$ coefficients were significant and persistent for all the considered period. In particular, estimates plunged at the fifth week after the policies introduction ($\delta_{5}=-7.14$) and then increased until the eleventh week ($\delta_{11}=-3.76$). 
 
 ### 5. Conclusions
 
