@@ -1,5 +1,7 @@
 # Difference-in-Differences to identify the causal effect of NPIs during Covid-19: evidence from Denmark and Sweden
-_This project was prepared with a M.Sc. colleague for the Labour economics and Policy evaluation course. Everything presented below was entirely prepared by the authors._
+:bangbang: _This project was prepared with a M.Sc. colleague for the Labour economics and Policy evaluation course. Everything presented below was entirely prepared by the authors._
+
+:question: _For any doubt, do not hesitate to contact me._
 
 During the first wave of Covid-19, not all European countries adopted the same restrictive strategies and policies. An interesting case is the one regarding Sweden, which decided to not impose severe confinement measures and to rely on community trust and individual decision-making. Conversely, confining Scandinavian countries such as Denmark immediately introduced severe non-pharmaceutical interventions (NPIs) to tackle the emergency. In this project, we exploit policy variation between Denmark and Sweden to investigate the causal effect of introducing NPIs, namely workplace closing and gatherings restrictions, on the 7-day moving average of deaths and cases. Our Difference-in-Differences (DiD) models provide evidence that during the first Covid-19 wave such policies have been significantly effective and persistent over time in curtailing the curve of deaths and cases in Denmark, as compared to the Swedish situation.
 
