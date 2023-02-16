@@ -93,7 +93,7 @@ geom_vline(xintercept = as.Date("2020-03-18"), linetype='dashed', color='blue', 
 
 
 ### 4. Model estimation (DiD)
-The purpose of the article is thus to apply a_**Difference-in-Differences (DiD)**_ framework to estimate the causal effect of NPIs (especially workplace closing and gatherings restrictions), which took place in Denmark but not in Sweden, on the 7-day moving average of daily Covid-19 deaths and cases, normalized per million population. In particular, the period considered covers February 26 - June 3, 2020, which comprehends the first wave of Covid-19 in Scandinavia. The DiD approach has been chosen because it “makes use of naturally occurring phenomena or policy changes that may induce some form of randomization across individuals in the eligibility of the assignment to the treatment” (Blundell et al., 2009). In this setting, the job places closing and gathering restrictions contribute to naturally creating a reasonable control group (Sweden) and a reasonable treatment group (Denmark) through which it is possible to evaluate the efficacy of the policy. 
+The purpose of the article is thus to apply a **Difference-in-Differences (DiD)** framework to estimate the causal effect of NPIs (especially workplace closing and gatherings restrictions), which took place in Denmark but not in Sweden, on the 7-day moving average of daily Covid-19 deaths and cases, normalized per million population. In particular, the period considered covers February 26 - June 3, 2020, which comprehends the first wave of Covid-19 in Scandinavia. The DiD approach has been chosen because it “makes use of naturally occurring phenomena or policy changes that may induce some form of randomization across individuals in the eligibility of the assignment to the treatment” (Blundell et al., 2009). In this setting, the job places closing and gathering restrictions contribute to naturally creating a reasonable control group (Sweden) and a reasonable treatment group (Denmark) through which it is possible to evaluate the efficacy of the policy. 
 
 In the absence of randomized controlled trials, we used observational data to test the efficacy of NPIs on the 7-day moving average of Covid-19 deaths and cases. As seen in the institutional background section, Denmark and Sweden share sufficient similarities so that, when faced with an exogenous policy intervention in one country, it is possible to consider them as a reasonable treatment group (Denmark) and control group (Sweden). In particular, the effect of NPIs (workplace closures and gatherings restrictions) on Covid-19 cases and deaths was investigated with two different approaches:
 
@@ -154,6 +154,35 @@ smooth.deaths.3 <- lm(new_deaths_per_million_smoothed ~ Treat + Post.3 + Post.3*
 
 #check summary() for coefficients
 ```
+<img width="500" alt="table 3" src="https://user-images.githubusercontent.com/87983033/219318735-2476645e-6a65-4f69-a958-4279e17c50da.png">
+
+### 4.3 Event-study approach
+As previously said, the event-study approach allows to inspect how the “lockdown effect” changed over time and the extent to which it remained significant. Restrictions were heavier in Denmark than in Sweden until June 3, where the policies were placed on the same level (both countries forbade gatherings greater than 10 people). We estimated an event-study model using 7-day moving average observations up to June 3 in order to evaluate the joint effect of workplace closures and gatherings restrictions in the eleven weeks after the policies introduction (March 18). The model has the following form: 
+
+$y_{c,t,w}$ = $α$ + $γ$ * $Treat_c$+ $Σ_{w=2}^{W}$($λ_w$ * $Week_w$) + $Σ_{w=1}^{W}$($δ_w$ * $TStatus_{c,t}$ * $Week_w$) + $ε_{c,t}$
+
+Where $y_{c,t,w}$ denotes the outcome variable for country $c$ at day $t$ and week $w$, $Treat_c$ is a dummy identifying the treated state (1 for Denmark, 0 for Sweden), $\lambda_w$ are the week-fixed effects coefficients, and $TStatus_{c,t}$ is a dummy equal to 1 if and only if country $c$ is treated at time $t$. Our coefficients of interest are the $\delta_w$'s, which capture the differences between the two states in the outcome variable caused by the treatment across eleven weeks from the beginning of the treatment. Estimates for $\delta_w$ and relative 95% C.I. are shown in the plots below. 
+
+```ruby
+#Week fixed effects
+dta$Week <- factor(rep(1:14, each=14))
+
+#CASES Event study
+event.study.cases <- lm(new_cases_per_million_smoothed ~ Treat + Week + Week*C2_Workplace - C2_Workplace, dta)
+coeff.cases <- as.data.frame(summary(event.study.cases)$coefficients[-c(1:15), c('Estimate', "Std. Error", "Pr(>|t|)")])
+coeff.cases$Inf.Limit <- coeff.cases$Estimate - (1.96 * coeff.cases$`Std. Error`)
+coeff.cases$Sup.Limit <- coeff.cases$Estimate + (1.96 * coeff.cases$`Std. Error`)
+
+###Plot
+ggplot(coeff.cases, aes(x=1:11, y=Estimate)) + geom_point(size=3, color='#BC412B') + 
+  geom_line(linetype='dashed', color='#BC412B') + geom_hline(yintercept = 0, linetype='dashed') +
+  geom_errorbar(aes(ymin=Inf.Limit, ymax=Sup.Limit), width=0.4, color='black', size=1, alpha=0.4) + 
+  theme_bw() +
+  labs(x='Weeks after March 18')
+```
+<img width="500" alt="fig 5" src="https://user-images.githubusercontent.com/87983033/219320158-36446bdd-ed04-49d8-b8f1-cba31c14f0b6.png">
+
+<img width="500" alt="fig 6" src="https://user-images.githubusercontent.com/87983033/219320141-cd774f00-14ed-4e39-b3f8-8214105b6133.png">
 
 ### 5. Conclusions
 
