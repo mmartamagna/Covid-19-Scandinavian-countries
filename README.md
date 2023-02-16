@@ -93,7 +93,7 @@ geom_vline(xintercept = as.Date("2020-03-18"), linetype='dashed', color='blue', 
 
 
 ### 4. Model estimation (DiD)
-The purpose of the article is thus to apply a_**Difference-in-Differences (DiD)**_ framework to estimate the causal effect of NPIs (especially workplace closing and gatherings restrictions), which took place in Denmark but not in Sweden, on the 7-day moving average of daily Covid-19 deaths and cases, normalized per million population. In particular, the period considered covers February 26 - June 3, 2020, which comprehends the first wave of Covid-19 in Scandinavia. The DiD approach has been chosen because it “makes use of naturally occurring phenomena or policy changes that may induce some form of randomization across individuals in the eligibility of the assignment to the treatment” (Blundell et al., 2009). In this setting, the job places closing and gathering restrictions contribute to naturally creating a reasonable control group (Sweden) and a reasonable treatment group (Denmark) through which it is possible to evaluate the efficacy of the policy. We found evidence that such policies were significantly effective in curbing down the curve of deaths and cases in Denmark, as compared to the Swedish situation. Moreover, we found such effects to be particularly persistent over time.
+The purpose of the article is thus to apply a_**Difference-in-Differences (DiD)**_ framework to estimate the causal effect of NPIs (especially workplace closing and gatherings restrictions), which took place in Denmark but not in Sweden, on the 7-day moving average of daily Covid-19 deaths and cases, normalized per million population. In particular, the period considered covers February 26 - June 3, 2020, which comprehends the first wave of Covid-19 in Scandinavia. The DiD approach has been chosen because it “makes use of naturally occurring phenomena or policy changes that may induce some form of randomization across individuals in the eligibility of the assignment to the treatment” (Blundell et al., 2009). In this setting, the job places closing and gathering restrictions contribute to naturally creating a reasonable control group (Sweden) and a reasonable treatment group (Denmark) through which it is possible to evaluate the efficacy of the policy. 
 
 In the absence of randomized controlled trials, we used observational data to test the efficacy of NPIs on the 7-day moving average of Covid-19 deaths and cases. As seen in the institutional background section, Denmark and Sweden share sufficient similarities so that, when faced with an exogenous policy intervention in one country, it is possible to consider them as a reasonable treatment group (Denmark) and control group (Sweden). In particular, the effect of NPIs (workplace closures and gatherings restrictions) on Covid-19 cases and deaths was investigated with two different approaches:
 
@@ -112,6 +112,48 @@ This because the incubation period for Covid-19 (i.e., the time between exposure
 
 3) **Absence of systematic composition changes within each group**. If systematic composition changes (e.g. in population density) occurred within each group, the observed difference in the outcome would be caused not only by the treatment itself but also by those changes. It is unlikely this assumption to be disregarded. The populations of the considered countries are large, and so a huge movement of people would be needed to change the composition substantially. Second, many travel bans were adopted at that time.
 
+### 4.2 Standard DiD equation
+In the current section, we estimated a simple Difference-in-Differences (DiD) model to identify the restrictions’ effect on deaths and cases due to Covid-19. Therefore, we defined the following equation:
+
+$y_{c,t}$ = $α$ + $γ$ * $Treat_c$ + $λ$ * $Post_t$ + $δ$($Treat_c$ * $Post_t$) + $ε_{c,t}$
+
+Where $y_{c,t}$ denotes the outcome variable for country $c$ at time $t$, $Treat_c$ is a dummy identifying the treated country (1 for Denmark, 0 for Sweden), $Post_t$ is a dummy variable identifying the post-treatment observations, and $\delta$ is the coefficient of interest (the ATT). As already said, different specifications are used to define pre- and post-treatment periods ($t=t_0$) and the model is estimated with two different outcome variables: 7-day moving average of new daily cases and new daily deaths per million population. The results of the model, estimated through the `lm` R function, are shown in the table below.
+
+```ruby
+#Factorize the indicator
+dta$C2_Workplace <- factor(dta$C2_Workplace)
+
+#No measure = Recommended = 0; Required = 1
+levels(dta$C2_Workplace) <- c(0,0,1)
+
+#Create Treat and Post dummies
+dta$Post.1 <- factor(ifelse(dta$Time >= as.Date("2020-03-18"), 1, 0))
+dta$Post.2 <- factor(ifelse(dta$Time >= as.Date("2020-04-01"), 1, 0))
+dta$Post.3 <- factor(ifelse(dta$Time >= as.Date("2020-04-08"), 1, 0))
+dta$Treat <- factor(ifelse(dta$Country=='DNK', 1, 0))
+
+#Models for cases
+###Post-1
+smooth.cases.1 <- lm(new_cases_per_million_smoothed ~ Treat + Post.1 + Post.1*Treat, dta, subset=1:84)
+
+###Post-2
+smooth.cases.2 <- lm(new_cases_per_million_smoothed ~ Treat + Post.2 + Post.2*Treat, dta, subset=29:112)
+
+###Post-3
+smooth.cases.3 <- lm(new_cases_per_million_smoothed ~ Treat + Post.3 + Post.3*Treat, dta, subset=43:126)
+
+#Model for deaths
+###Post-1
+smooth.deaths.1 <- lm(new_deaths_per_million_smoothed ~ Treat + Post.1 + Post.1*Treat, dta, subset=1:84)
+
+###Post-2
+smooth.deaths.2 <- lm(new_deaths_per_million_smoothed ~ Treat + Post.2 + Post.2*Treat, dta, subset=29:112)
+
+###Post-3
+smooth.deaths.3 <- lm(new_deaths_per_million_smoothed ~ Treat + Post.3 + Post.3*Treat, dta, subset=43:126)
+
+#check summary() for coefficients
+```
 
 ### 5. Conclusions
 
